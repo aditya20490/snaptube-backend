@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YT Downloader</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 20px auto; padding: 0 16px; }
+    input { width: 100%; padding: 12px; box-sizing: border-box; font-size: 16px; }
+    button { padding: 12px 16px; margin: 8px 6px 0 0; cursor: pointer; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
+    img { max-width: 100%; margin-top: 12px; border-radius: 8px; }
+    h3 { font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>🎬 YT Downloader</h2>
+  <input id="url" placeholder="Paste YouTube URL" />
+  <button onclick="getInfo()">Fetch</button>
+  <div id="result"></div>
+
+  <script>
+    let currentUrl = '';
+
+    async function getInfo() {
+      currentUrl = document.getElementById('url').value.trim();
+      document.getElementById('result').innerHTML = 'Loading...';
+      try {
+        const res = await fetch(`/api/info?url=${encodeURIComponent(currentUrl)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        document.getElementById('result').innerHTML = `
+          <h3>${data.title}</h3>
+          <img src="${data.thumbnail}" />
+          <br/>
+          <button onclick="download('mp4')">⬇️ MP4</button>
+          <button onclick="download('mp3')">🎵 MP3</button>
+        `;
+      } catch (e) {
+        document.getElementById('result').innerHTML = `<p style="color:red">${e.message}</p>`;
+      }
+    }
+
+    function download(type) {
+      window.location.href = `/api/download/${type}?url=${encodeURIComponent(currentUrl)}`;
+    }
+  </script>
+</body>
+</html>
