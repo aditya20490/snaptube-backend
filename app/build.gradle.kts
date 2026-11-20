@@ -14,6 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         ndk {
+            // We use these to keep the app size small while supporting most phones
             abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
     }
