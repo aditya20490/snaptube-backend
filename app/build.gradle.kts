@@ -14,7 +14,6 @@ android {
         versionCode = 1
         versionName = "1.0"
         ndk {
-            // We use these to keep the app size small while supporting most phones
             abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
     }
@@ -28,6 +27,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+
+    // This is the fix for your current error
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
 }
 
 dependencies {
